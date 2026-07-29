@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GWN — Global Growth Network for Web3 Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #090C14;
+    --bg-panel: #10141F;
+    --line: #1E2536;
+    --cyan: #00E5C7;
+    --violet: #7C6CFF;
+    --text: #E9ECF4;
+    --muted: #8A93AB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-0.02em;}
+  a{color:inherit;text-decoration:none;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px;}
+
+  /* Nav */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(9,12,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;max-width:1080px;margin:0 auto;
+  }
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:0.02em;
+    display:flex;align-items:center;gap:8px;}
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);}
+  .nav-links{display:flex;gap:32px;font-size:14px;color:var(--muted);}
+  .nav-links a:hover{color:var(--cyan);}
+  .nav-cta{
+    font-size:13px;padding:9px 18px;border:1px solid var(--cyan);border-radius:100px;color:var(--cyan);
+    transition:all .2s;
+  }
+  .nav-cta:hover{background:var(--cyan);color:#04110E;}
+  .nav-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;}
+
+  /* Hero */
+  .hero{
+    position:relative;padding:120px 32px 100px;text-align:center;overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  #network-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.55;}
+  .hero-inner{position:relative;z-index:2;}
+  .eyebrow{
+    font-family:'JetBrains Mono';font-size:12px;color:var(--cyan);letter-spacing:0.12em;
+    text-transform:uppercase;margin-bottom:20px;display:inline-block;
+    border:1px solid rgba(0,229,199,0.35);padding:6px 14px;border-radius:100px;
+  }
+  .hero h1{
+    font-size:clamp(36px,6vw,64px);line-height:1.08;margin-bottom:22px;
+    background:linear-gradient(180deg,#fff 30%, var(--muted));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero h1 span{
+    background:linear-gradient(90deg,var(--cyan),var(--violet));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{
+    max-width:560px;margin:0 auto 36px;color:var(--muted);font-size:17px;
+  }
+  .hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:linear-gradient(90deg,var(--cyan),var(--violet));
+    color:#05070C;font-weight:600;font-size:14px;padding:14px 28px;border-radius:100px;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,108,255,0.35);}
+  .btn-secondary{
+    border:1px solid var(--line);color:var(--text);font-size:14px;padding:14px 28px;border-radius:100px;
+    transition:border-color .2s;
+  }
+  .btn-secondary:hover{border-color:var(--cyan);}
+
+  /* stat strip */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);
+  }
+  .stat{padding:32px 24px;text-align:center;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Space Grotesk';font-size:30px;font-weight:700;color:var(--cyan);}
+  .stat .label{font-size:12px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;}
+
+  section{padding:90px 0;border-bottom:1px solid var(--line);}
+  .section-head{max-width:640px;margin-bottom:52px;}
+  .section-eyebrow{
+    font-family:'JetBrains Mono';font-size:12px;color:var(--violet);text-transform:uppercase;
+    letter-spacing:0.12em;margin-bottom:12px;
+  }
+  .section-head h2{font-size:clamp(26px,4vw,38px);margin-bottom:14px;}
+  .section-head p{color:var(--muted);font-size:15px;}
+
+  /* Who we are */
+  .who-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .who-grid p{color:var(--muted);margin-bottom:16px;font-size:15px;}
+  .pillars{display:flex;flex-direction:column;gap:18px;}
+  .pillar{
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    transition:border-color .2s;
+  }
+  .pillar:hover{border-color:var(--cyan);}
+  .pillar h4{font-size:15px;margin-bottom:6px;color:var(--text);}
+  .pillar span{font-size:13px;color:var(--muted);}
+
+  /* Services */
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .service-card{
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:16px;padding:28px;
+    transition:transform .25s, border-color .25s;
+  }
+  .service-card:hover{transform:translateY(-4px);border-color:var(--violet);}
+  .service-icon{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,rgba(0,229,199,0.15),rgba(124,108,255,0.15));
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+    font-family:'JetBrains Mono';color:var(--cyan);font-size:13px;
+  }
+  .service-card h3{font-size:17px;margin-bottom:10px;}
+  .service-card p{font-size:14px;color:var(--muted);}
+
+  /* Process */
+  .process-list{display:flex;flex-direction:column;}
+  .process-item{
+    display:grid;grid-template-columns:70px 1fr;gap:24px;padding:26px 0;border-top:1px solid var(--line);
+  }
+  .process-item:last-child{border-bottom:1px solid var(--line);}
+  .process-item .idx{font-family:'JetBrains Mono';color:var(--violet);font-size:14px;padding-top:2px;}
+  .process-item h4{font-size:17px;margin-bottom:6px;}
+  .process-item p{color:var(--muted);font-size:14px;max-width:520px;}
+
+  /* Pricing */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .price-card{
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:16px;padding:30px;
+    display:flex;flex-direction:column;
+  }
+  .price-card.featured{border-color:var(--cyan);box-shadow:0 0 40px rgba(0,229,199,0.08);position:relative;}
+  .featured-tag{
+    position:absolute;top:-12px;right:24px;background:var(--cyan);color:#04110E;font-size:11px;
+    font-weight:700;padding:4px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:0.05em;
+  }
+  .price-card h3{font-size:16px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;}
+  .price-card .amount{font-family:'Space Grotesk';font-size:34px;font-weight:700;margin-bottom:6px;}
+  .price-card .amount span{font-size:14px;color:var(--muted);font-weight:400;}
+  .price-card .desc{font-size:13px;color:var(--muted);margin-bottom:24px;}
+  .price-card ul{list-style:none;flex:1;margin-bottom:26px;}
+  .price-card li{
+    font-size:13.5px;color:var(--text);padding:9px 0;border-top:1px solid var(--line);
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .price-card li::before{content:"›";color:var(--cyan);font-weight:700;}
+  .price-btn{
+    text-align:center;padding:12px;border-radius:100px;border:1px solid var(--line);font-size:14px;font-weight:600;
+    transition:all .2s;
+  }
+  .price-card.featured .price-btn{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#05070C;border:none;}
+  .price-btn:hover{border-color:var(--cyan);}
+
+  /* CTA band */
+  .cta-band{
+    text-align:center;padding:90px 32px;border-bottom:1px solid var(--line);
+    background:radial-gradient(circle at 50% 0%, rgba(124,108,255,0.12), transparent 60%);
+  }
+  .cta-band h2{font-size:clamp(26px,4vw,40px);margin-bottom:18px;}
+  .cta-band p{color:var(--muted);margin-bottom:32px;}
+
+  footer{padding:48px 32px 32px;}
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px;margin-bottom:40px;
+  }
+  .footer-brand .logo{margin-bottom:14px;}
+  .footer-brand p{color:var(--muted);font-size:13.5px;max-width:260px;}
+  .footer-col h5{font-size:13px;color:var(--text);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em;}
+  .footer-col a{display:block;color:var(--muted);font-size:13.5px;margin-bottom:10px;transition:color .2s;}
+  .footer-col a:hover{color:var(--cyan);}
+  .footer-bottom{
+    border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;
+    color:var(--muted);font-size:12.5px;flex-wrap:wrap;gap:10px;
+  }
+
+  @media(max-width:860px){
+    .who-grid,.services-grid,.pricing-grid{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(2){border-right:none;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:640px){
+    .nav-links{display:none;}
+    .nav-toggle{display:block;}
+    .hero{padding:90px 20px 70px;}
+    section{padding:60px 0;}
+    .wrap{padding:0 20px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation:none !important;transition:none !important;}
+  }
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo"><span class="dot"></span>GWN</div>
+    <div class="nav-links">
+      <a href="#who">আমরা কারা</a>
+      <a href="#services">সার্ভিসেস</a>
+      <a href="#process">প্রসেস</a>
+      <a href="#pricing">প্রাইসিং</a>
+      <a href="#contact">যোগাযোগ</a>
+    </div>
+    <a href="#contact" class="nav-cta">শুরু করুন</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <canvas id="network-canvas"></canvas>
+  <div class="hero-inner wrap">
+    <span class="eyebrow">Web3 Growth Partner</span>
+    <h1>আপনার Web3 প্রজেক্টের জন্য<br><span>গ্লোবাল গ্রোথ নেটওয়ার্ক</span></h1>
+    <p>কমিউনিটি বিল্ডিং থেকে শুরু করে টোকেন লঞ্চ পর্যন্ত — GWN আপনার প্রজেক্টকে সঠিক অডিয়েন্স, সঠিক পার্টনার আর সঠিক স্ট্র্যাটেজির সাথে যুক্ত করে।</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">ফ্রি কনসালটেশন বুক করুন</a>
+      <a href="#services" class="btn-secondary">সার্ভিস দেখুন</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="num">120+</div><div class="label">প্রজেক্ট সাপোর্টেড</div></div>
+  <div class="stat"><div class="num">45</div><div class="label">দেশে নেটওয়ার্ক</div></div>
+  <div class="stat"><div class="num">2.4M+</div><div class="label">কমিউনিটি মেম্বার</div></div>
+  <div class="stat"><div class="num">98%</div><div class="label">ক্লায়েন্ট রিটেনশন</div></div>
+</div>
+
+<section id="who">
+  <div class="wrap">
+    <div class="who-grid">
+      <div>
+        <div class="section-eyebrow">Who We Are</div>
+        <h2>আমরা কারা</h2>
+        <p>GWN একটি গ্লোবাল টিম — মার্কেটার, কমিউনিটি ম্যানেজার, স্ট্র্যাটেজিস্ট আর Web3 অপারেটরদের নিয়ে গঠিত — যারা early-stage থেকে scaling পর্যায়ের ব্লকচেইন প্রজেক্টের গ্রোথ নিয়ে কাজ করে।</p>
+        <p>আমরা বিশ্বাস করি টেকসই গ্রোথ আসে বিশ্বাসযোগ্য কমিউনিটি, স্বচ্ছ যোগাযোগ আর ডেটা-ভিত্তিক সিদ্ধান্ত থেকে — শুধু হাইপ থেকে নয়।</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar"><h4>কমিউনিটি-ফার্স্ট</h4><span>প্রতিটি স্ট্র্যাটেজি কমিউনিটির বিশ্বাসকে কেন্দ্র করে সাজানো</span></div>
+        <div class="pillar"><h4>ডেটা-চালিত</h4><span>প্রতিটি ক্যাম্পেইন ট্র্যাক করা এবং মাপা হয়</span></div>
+        <div class="pillar"><h4>গ্লোবাল রিচ</h4><span>এশিয়া, ইউরোপ ও আমেরিকা জুড়ে বিস্তৃত পার্টনার নেটওয়ার্ক</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Services</div>
+      <h2>প্রতিটি Web3 প্রজেক্টের জন্য নমনীয় গ্রোথ সলিউশন</h2>
+      <p>যে ধাপেই থাকুন না কেন — লঞ্চের আগে বা পরে — GWN-এর কাছে আপনার জন্য সঠিক সার্ভিস প্যাকেজ আছে।</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">01</div>
+        <h3>কমিউনিটি ম্যানেজমেন্ট</h3>
+        <p>Discord, Telegram ও X-এ সক্রিয়, বিশ্বাসযোগ্য কমিউনিটি গড়ে তোলা ও পরিচালনা।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">02</div>
+        <h3>ইনফ্লুয়েন্সার মার্কেটিং</h3>
+        <p>যাচাইকৃত KOL নেটওয়ার্কের মাধ্যমে সঠিক অডিয়েন্সের কাছে প্রজেক্ট পৌঁছে দেওয়া।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">03</div>
+        <h3>কনটেন্ট ও ব্র্যান্ডিং</h3>
+        <p>হোয়াইটপেপার থেকে সোশ্যাল কনটেন্ট — সবকিছুতে সামঞ্জস্যপূর্ণ ব্র্যান্ড ভয়েস।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">04</div>
+        <h3>টোকেন লঞ্চ সাপোর্ট</h3>
+        <p>লঞ্চ পূর্ববর্তী প্রস্তুতি থেকে লিস্টিং পরবর্তী গ্রোথ পর্যন্ত সম্পূর্ণ সহায়তা।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">05</div>
+        <h3>পার্টনারশিপ ডেভেলপমেন্ট</h3>
+        <p>ইকোসিস্টেমের ভেতরে ও বাইরে কৌশলগত পার্টনারশিপ তৈরি করা।</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">06</div>
+        <h3>অ্যানালিটিক্স ও রিপোর্টিং</h3>
+        <p>রিয়েল-টাইম ড্যাশবোর্ডের মাধ্যমে গ্রোথ পারফরম্যান্স মনিটর করা।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">How We Work</div>
+      <h2>আমাদের কাজের ধাপ</h2>
+    </div>
+    <div class="process-list">
+      <div class="process-item">
+        <div class="idx mono">Step 1</div>
+        <div><h4>ডিসকভারি কল</h4><p>আপনার প্রজেক্ট, লক্ষ্য এবং টার্গেট অডিয়েন্স বোঝার জন্য একটি ফ্রি কনসালটেশন।</p></div>
+      </div>
+      <div class="process-item">
+        <div class="idx mono">Step 2</div>
+        <div><h4>কাস্টম স্ট্র্যাটেজি</h4><p>আপনার লক্ষ্য অনুযায়ী একটি নির্দিষ্ট গ্রোথ রোডম্যাপ তৈরি করা হয়।</p></div>
+      </div>
+      <div class="process-item">
+        <div class="idx mono">Step 3</div>
+        <div><h4>এক্সিকিউশন</h4><p>ডেডিকেটেড টিম প্রতিদিনের ক্যাম্পেইন ও কমিউনিটি কার্যক্রম পরিচালনা করে।</p></div>
+      </div>
+      <div class="process-item">
+        <div class="idx mono">Step 4</div>
+        <div><h4>অপ্টিমাইজেশন</h4><p>সাপ্তাহিক রিপোর্ট ও ডেটা বিশ্লেষণের ভিত্তিতে স্ট্র্যাটেজি ক্রমাগত উন্নত করা হয়।</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Pricing</div>
+      <h2>আপনার প্রজেক্টের জন্য উপযুক্ত প্ল্যান</h2>
+      <p>স্বচ্ছ, ফ্লেক্সিবল প্রাইসিং — কোনো লুকানো ফি নেই।</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <div class="amount">$1,200 <span>/ মাস</span></div>
+        <div class="desc">নতুন প্রজেক্টের জন্য বেসিক কমিউনিটি সেটআপ।</div>
+        <ul>
+          <li>কমিউনিটি ম্যানেজমেন্ট (Discord + Telegram)</li>
+          <li>সাপ্তাহিক কনটেন্ট ক্যালেন্ডার</li>
+          <li>মাসিক পারফরম্যান্স রিপোর্ট</li>
+        </ul>
+        <a href="#contact" class="price-btn">শুরু করুন</a>
+      </div>
+      <div class="price-card featured">
+        <span class="featured-tag">জনপ্রিয়</span>
+        <h3>Growth</h3>
+        <div class="amount">$3,500 <span>/ মাস</span></div>
+        <div class="desc">স্কেলিং প্রজেক্টের জন্য সম্পূর্ণ গ্রোথ প্যাকেজ।</div>
+        <ul>
+          <li>Starter-এর সবকিছু</li>
+          <li>ইনফ্লুয়েন্সার ক্যাম্পেইন</li>
+          <li>পার্টনারশিপ আউটরিচ</li>
+          <li>ডেডিকেটেড অ্যাকাউন্ট ম্যানেজার</li>
+        </ul>
+        <a href="#contact" class="price-btn">শুরু করুন</a>
+      </div>
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <div class="amount">কাস্টম</div>
+        <div class="desc">টোকেন লঞ্চ ও বড় স্কেলের প্রজেক্টের জন্য।</div>
+        <ul>
+          <li>Growth-এর সবকিছু</li>
+          <li>টোকেন লঞ্চ স্ট্র্যাটেজি</li>
+          <li>মাল্টি-রিজিয়ন KOL নেটওয়ার্ক</li>
+          <li>প্রায়োরিটি সাপোর্ট</li>
+        </ul>
+        <a href="#contact" class="price-btn">যোগাযোগ করুন</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band" id="contact">
+  <h2>আপনার প্রজেক্ট নিয়ে কথা বলতে প্রস্তুত?</h2>
+  <p>আমাদের টিমের সাথে একটি ফ্রি ডিসকভারি কল বুক করুন — কোনো প্রতিশ্রুতি ছাড়াই।</p>
+  <a href="mailto:hello@gwn.example" class="btn-primary">hello@gwn.example</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="dot"></span>GWN</div>
+        <p>Global Growth Network — Web3 প্রজেক্টের জন্য কমিউনিটি, মার্কেটিং ও পার্টনারশিপ গ্রোথ পার্টনার।</p>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#who">আমরা কারা</a>
+        <a href="#services">সার্ভিসেস</a>
+        <a href="#pricing">প্রাইসিং</a>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <a href="#process">প্রসেস</a>
+        <a href="#contact">যোগাযোগ</a>
+      </div>
+      <div class="footer-col">
+        <h5>Social</h5>
+        <a href="#">X (Twitter)</a>
+        <a href="#">Discord</a>
+        <a href="#">Telegram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 GWN — Global Growth Network. এটি একটি ডামি/স্যাম্পল পেজ।</span>
+      <span class="mono">Built for GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Ambient network animation in hero background
+const canvas = document.getElementById('network-canvas');
+const ctx = canvas.getContext('2d');
+let w, h, nodes = [];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function resize(){
+  const hero = document.querySelector('.hero');
+  w = canvas.width = hero.offsetWidth;
+  h = canvas.height = hero.offsetHeight;
+}
+function initNodes(){
+  const count = Math.max(18, Math.floor(w/70));
+  nodes = Array.from({length: count}, () => ({
+    x: Math.random()*w, y: Math.random()*h,
+    vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  for(const n of nodes){
+    if(!reduceMotion){ n.x += n.vx; n.y += n.vy; }
+    if(n.x<0||n.x>w) n.vx*=-1;
+    if(n.y<0||n.y>h) n.vy*=-1;
+  }
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i], b=nodes[j];
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if(d < 160){
+        ctx.strokeStyle = `rgba(0,229,199,${0.14*(1-d/160)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      }
+    }
+  }
+  for(const n of nodes){
+    ctx.fillStyle = 'rgba(124,108,255,0.7)';
+    ctx.beginPath(); ctx.arc(n.x,n.y,1.6,0,Math.PI*2); ctx.fill();
+  }
+  if(!reduceMotion) requestAnimationFrame(draw);
+}
+window.addEventListener('resize', () => { resize(); initNodes(); });
+resize(); initNodes(); draw();
+</script>
+
+</body>
+</html>
